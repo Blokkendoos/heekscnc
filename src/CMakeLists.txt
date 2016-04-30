@@ -6,6 +6,11 @@ set ( CMAKE_BUILD_TYPE Debug )
 add_definitions ( -Wall -DHEEKSPLUGIN -DHEEKSCNC -DUNICODE -DTIXML_USE_STL
                   -DOPEN_SOURCE_GEOMETRY -DWXUSINGDLL )
 find_package( wxWidgets REQUIRED COMPONENTS base core gl )
+##JvO
+set( wxWidgets_LIBRARIES "${wxWidgets_LIBRARIES} -liconv -lwx_osx_cocoau_aui-3.1" )
+string (REPLACE ";" " " wxWidgets_LIBRARIES "${wxWidgets_LIBRARIES}")
+set( wxWidgets_INCLUDE_DIRS "/opt/local/Library/Frameworks/wxWidgets.framework/Versions/wxWidgets/3.1/lib/wx/include/osx_cocoa-unicode-3.1;/opt/local/Library/Frameworks/wxWidgets.framework/Versions/wxWidgets/3.1/include/wx-3.1" )
+MESSAGE(STATUS "wxWidgets_LIBRARIES is: " ${wxWidgets_LIBRARIES})
 
 #find OCE or OpenCASCADE
 set( CASCADE_LIBS "TKernel;TKBRep;TKTopAlgo;TKMath;TKV3d;TKGeomBase;TKGeomAlgo;TKShHealing;TKBO;TKBool;TKOffset;TKLCAF;TKMath;TKService" )
@@ -19,7 +24,7 @@ else() #look for OpenCASCADE
 endif()
 
 find_package ( HeeksCAD REQUIRED )
-find_package ( libheekstinyxml REQUIRED )
+#find_package ( libheekstinyxml REQUIRED )
 
 include(${wxWidgets_USE_FILE})
 
@@ -174,9 +179,10 @@ set( heekscnc_SRCS
    )
 
 add_library( heekscnc SHARED ${heekscnc_SRCS} ${heekscad_SRCS} ${platform_SRCS} )
-target_link_libraries( heekscnc ${wxWidgets_LIBRARIES}  ${OpenCASCADE_LIBRARIES} ${libheekstinyxml_LIBRARIES} )
+##JvO
+target_link_libraries( heekscnc ${wxWidgets_LIBRARIES} ${OpenCASCADE_LIBRARIES} ${libheekstinyxml_LIBRARIES} ${libarea_LIBRARIES} )
 set_target_properties( heekscnc PROPERTIES SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH} )
-set_target_properties( heekscnc PROPERTIES LINK_FLAGS -Wl,-Bsymbolic-functions )
+#set_target_properties( heekscnc PROPERTIES LINK_FLAGS -Wl,-Bsymbolic-functions )
 
 #---------------- the lines below tell cmake what files get installed where.---------------------
 #------------------- this is used for 'make install' and 'make package' -------------------------

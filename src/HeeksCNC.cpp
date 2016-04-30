@@ -780,9 +780,11 @@ static void AddToolBars()
 {
 	if(!theApp.m_machining_hidden)
 	{
-		wxFrame* frame = heeksCAD->GetMainFrame();
+		//wxFrame* frame = heeksCAD->GetMainFrame();
+		wxPanel* panel = heeksCAD->GetMainPanel();
+		
 		if(theApp.m_machiningBar)delete theApp.m_machiningBar;
-		theApp.m_machiningBar = new wxToolBar(frame, -1, wxDefaultPosition, wxDefaultSize, wxTB_NODIVIDER | wxTB_FLAT);
+		theApp.m_machiningBar = new wxToolBar(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_NODIVIDER | wxTB_FLAT);
 		theApp.m_machiningBar->SetToolBitmapSize(wxSize(ToolImage::GetBitmapSize(), ToolImage::GetBitmapSize()));
 
 		heeksCAD->StartToolBarFlyout(_("Milling operations"));
@@ -1400,7 +1402,8 @@ wxString CHeeksCNCApp::GetResFolder() const
 		#else
 			wxStandardPaths sp;
 		#endif
-		return (sp.GetInstallPrefix() + wxT("/share/heekscnc"));
+		//return ( sp.GetInstallPrefix() + wxT("/share/heekscnc"));
+		return ( sp.GetResourcesDir() + wxT("/../share/heekscnc"));
 	#else // CMAKE_UNIX
 		// Windows
 		return (m_dll_path + _T("/../../share/heekscnc"));
